@@ -24,14 +24,18 @@ class GetVehiculeStatus
 
         // Get the request GUID key by sending vehicle data to the API
         $response = $getRequestGuid->getRequestGuidKey($vehicleData);
-        $response = json_decode($response, true); // Decode the JSON response
 
-        if ($response['status'] == 'success') {
+        // If the response is a JSON string, decode it
+        if (is_string($response)) {
+            $response = json_decode($response, true); // Decode the JSON response
+        }
+        // Check if 'status' key exists in the response
+        if (isset($response['status']) && $response['status'] == 'success') {
             // If the response is successful, get the request GUID
             $requestGuid = $response['requestGuid'];
         } else {
             // If the response is not successful, print the response and stop execution
-            echo $response;
+            echo json_encode($response); // Convert the array to JSON string for printing
             die();
         }
 
